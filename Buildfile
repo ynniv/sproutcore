@@ -38,8 +38,19 @@ config :runtime,
   :use_modules => true,
   :factory_format => :function
   
-config :foundation, :required => [:runtime]
-config :datastore,  :required => [:runtime]
+config :datastore,
+  :required       => ['tiki/system', :runtime],
+  :debug_required => [],
+  :test_required  => ['core_test'],
+  :use_modules    => true,
+  :factory_format => :function
+
+config :foundation,
+  :required       => ['tiki/system', :runtime],
+  :debug_required => [],
+  :test_required  => ['core_test'],
+  :use_modules    => true,
+  :factory_format => :function
 
 # APP-LEVEL FRAMEWORKS
 %w(desktop mobile designer).each do |app_framework|
