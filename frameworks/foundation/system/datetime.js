@@ -5,9 +5,7 @@
 // License:   Licened under MIT license (see license.js)
 // ==========================================================================
 
-"import package sproutcore/runtime";
-"import core";
-"export package";
+var SC = require('core');
 
 /**
   Standard error thrown by SC.Scanner when it runs out of bounds
@@ -124,11 +122,11 @@ SC.Scanner = SC.Object.extend(
     
     @param {String} str the string to skip
     @throws {SC.SCANNER_SKIP_ERROR} if the given string could not be scanned
-    @returns {Boolean} YES if the given string was successfully scanned
+    @returns {Boolean} true if the given string was successfully scanned
   */
   skipString: function(str) {
     if (this.scan(str.length) !== str) throw SC.SCANNER_SKIP_ERROR;
-    return YES;
+    return true;
   },
   
   /**
@@ -189,7 +187,7 @@ SC.DateTime = SC.Object.extend(SC.Freezable, SC.Copyable,
     @property
     @type {Boolean}
   */
-  isFrozen: YES,
+  isFrozen: true,
   
   /**
     Returns a new DateTime object where one or more of the elements have been
@@ -319,7 +317,7 @@ SC.DateTime = SC.Object.extend(SC.Freezable, SC.Copyable,
   },
   
   /**
-    Returns YES if the passed DateTime is equal to the receiver, ie: if their
+    Returns true if the passed DateTime is equal to the receiver, ie: if their
     number of milliseconds since January, 1st 1970 00:00:00.0 UTC are equal.
     This is the preferred method for testing equality.
   
@@ -584,7 +582,7 @@ SC.DateTime.mixin(SC.Comparable,
     
     // the time options (hour, minute, sec, millisecond)
     // reset cascadingly (see documentation)
-    if (resetCascadingly === undefined || resetCascadingly === YES) {
+    if (resetCascadingly === undefined || resetCascadingly === true) {
       if ( !SC.none(opts.hour) && SC.none(opts.minute)) {
         opts.minute = 0;
       }
@@ -623,7 +621,7 @@ SC.DateTime.mixin(SC.Comparable,
     }
     for (var key in opts) opts[key] += this._get(key);
     
-    return this._adjust(opts, start, timezone, NO);
+    return this._adjust(opts, start, timezone, false);
   },
   
   /**
@@ -782,6 +780,8 @@ SC.DateTime.mixin(SC.Comparable,
     @see SC.DateTime#toFormattedString
   */
   __toFormattedString: function(part) {
+    var hour, offset;
+    
     switch(part[1]) {
       case 'a': return this.abbreviatedDayNames[this._get('dayOfWeek')];
       case 'A': return this.dayNames[this._get('dayOfWeek')];
@@ -792,10 +792,10 @@ SC.DateTime.mixin(SC.Comparable,
       case 'h': return this._get('hour');
       case 'H': return this._pad(this._get('hour'));
       case 'i':
-        var hour = this._get('hour');
+        hour = this._get('hour');
         return (hour === 12 || hour === 0) ? 12 : (hour + 12) % 12;
       case 'I': 
-        var hour = this._get('hour');
+        hour = this._get('hour');
         return this._pad((hour === 12 || hour === 0) ? 12 : (hour + 12) % 12);
       case 'j': return this._pad(this._get('dayOfYear'), 3);
       case 'm': return this._pad(this._get('month'));
@@ -811,7 +811,7 @@ SC.DateTime.mixin(SC.Comparable,
       case 'y': return this._pad(this._get('year') % 100);
       case 'Y': return this._get('year');
       case 'Z':
-        var offset = -1 * this._tz;
+        offset = -1 * this._tz;
         return (offset >= 0 ? '+' : '-')
                + this._pad(parseInt(Math.abs(offset)/60, 10))
                + ':'

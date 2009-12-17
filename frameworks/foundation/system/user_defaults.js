@@ -5,6 +5,8 @@
 // License:   Licened under MIT license (see license.js)
 // ==========================================================================
 
+var SC = require('core');
+
 /**
   @class
   
@@ -207,15 +209,15 @@ SC.UserDefaults = SC.Object.extend(/** @scope SC.UserDefaults.prototype */ {
   },
   
   _domainDidChange: function() {
-    var didChange = NO;
+    var didChange = false;
     if (this.get("userDomain") !== this._scud_userDomain) {
       this._scud_userDomain = this.get('userDomain');
-      didChange = YES;
+      didChange = true;
     }
     
     if (this.get('appDomain') !== this._scud_appDomain) {
       this._scud_appDomain = this.get('appDomain');
-      didChange = YES;
+      didChange = true;
     }
     
     if (didChange) this.allPropertiesDidChange();
