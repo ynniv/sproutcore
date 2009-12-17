@@ -98,10 +98,10 @@ test('advance', function() {
 });
 
 test('compare', function() {
-  equals(SC.DateTime.isComparable, YES);
+  equals(SC.DateTime.isComparable, true);
   equals(SC.compare(dt, dt), 0);
-  equals(dt.isEqual(dt), YES);
-  equals(dt.advance({hour: 1}).isEqual(dt), NO);
+  equals(dt.isEqual(dt), true);
+  equals(dt.advance({hour: 1}).isEqual(dt), false);
   equals(SC.compare(dt, dt.advance({hour: 1})), -1);
   equals(SC.compare(dt.advance({hour: 1}), dt), 1);
   equals(SC.DateTime.compareDate(dt, dt.advance({hour: 1})), 0);
@@ -141,10 +141,10 @@ test('Format', function() {
 });
 
 test('fancy getters', function() {
-  equals(dt.get('isLeapYear'), NO);
-  equals(SC.DateTime.create({year: 1900}).get('isLeapYear'), NO);
-  equals(SC.DateTime.create({year: 2000}).get('isLeapYear'), YES);
-  equals(SC.DateTime.create({year: 2004}).get('isLeapYear'), YES);
+  equals(dt.get('isLeapYear'), false);
+  equals(SC.DateTime.create({year: 1900}).get('isLeapYear'), false);
+  equals(SC.DateTime.create({year: 2000}).get('isLeapYear'), true);
+  equals(SC.DateTime.create({year: 2004}).get('isLeapYear'), true);
   
   equals(dt.get('daysInMonth'), 31);
   equals(SC.DateTime.create({year: 2000, month: 2}).get('daysInMonth'), 29);
