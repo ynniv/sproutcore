@@ -3,7 +3,9 @@
 // Copyright: ©2006-2009 Apple Inc. and contributors.
 // License:   Licened under MIT license (see license.js)
 // ==========================================================================
-/*global module test equals context ok same */
+
+"import package core_test";
+var SC = require('index'); // load sproutcore/foundation
 
 module('String.prototype.w()');
 
@@ -26,3 +28,5 @@ test("Trim ' spaces on both sides ' on left only", function() {
 test("Trim ' spaces on both sides ' on right only", function() {
   same(' spaces on both sides '.trimRight(), ' spaces on both sides', "should be equal");
 });
+
+plan.run();

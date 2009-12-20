@@ -2,7 +2,9 @@
 // Project:   DateTime Unit Test
 // Copyright: ©2009 Martin Ottenwaelter
 // ==========================================================================
-/*globals module test ok equals same stop start */
+
+"import package core_test";
+var SC = require('index'); // load foundation
 
 module('Time');
 
@@ -16,9 +18,7 @@ module("SC.DateTime", {
     timezones = [480, 420, 0, -60, -120, -330]; // PST, PDT, UTC, CET, CEST, Mumbai
   },
   teardown: function() {
-    delete ms;
-    delete options;
-    delete dt;
+    ms=options=dt=null;
   }
 });
 
@@ -250,3 +250,5 @@ test('timezones', function() {
   timeShouldBeEqualToHash(dt.toTimezone(-120), {year: 1985, month: 5, day: 8, hour:  3, minute:  0, second: 22, millisecond: 925, timezone: -120});
   timeShouldBeEqualToHash(dt.toTimezone(-330), {year: 1985, month: 5, day: 8, hour:  6, minute: 30, second: 22, millisecond: 925, timezone: -330});
 });
+
+plan.run();

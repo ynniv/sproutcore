@@ -17,7 +17,7 @@ SC.mixin({
   _bindReady: function() {
     if (this._isReadyBound) return;
     this._isReadyBound = true ;
-    tiki.require('system').ready(this, this._didBecomeReady); 
+    tiki.ready(this, this._didBecomeReady); 
   },
 
   /** @private handlers scheduled to execute on ready. */
