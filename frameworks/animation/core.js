@@ -104,6 +104,7 @@ SC.Animatable = {
     }
 
     // live animators
+    this._animatableCurrentStyle = null;
     this._animators = {}; // keyAnimated => object describing it.
     this._animatableSetCSS = "";
     this._last_transition_css = ""; // to keep from re-setting unnecessarily
@@ -190,12 +191,25 @@ SC.Animatable = {
     // call base with whatever is leftover
     return this;
   },
+  
+  /**
+  Returns the current set of styles and layout according to JavaScript transitions.
+  
+  That is, for transitions managed by JavaScript (rather than CSS), the current position
+  (even mid-transition) will be returned. For CSS-based transitions, the target position
+  will be returned. This function is mostly useful for testing.
+  
+  It will return null if there is no such style.
+  */
+  getCurrentJavaScriptStyles: function() {
+    return this._animatableCurrentStyle
+  },
 
   /**
   Resets animation, stopping all existing animations.
   */
   resetAnimation: function() {
-    this._animatableCurrentStyle = undefined;
+    this._animatableCurrentStyle = null;
     this._stopJavaScriptAnimations();
     this.disableAnimation();
     this.updateStyle();
@@ -237,7 +251,7 @@ SC.Animatable = {
       if (f)
       {
         if (i == "left") { l[i] = f.x; continue; }
-        else if (i == " top") { l[i] = f.y; continue; }
+        else if (i == "top") { l[i] = f.y; continue; }
         else if (i == "right") { l[i] = p.width - f.x - f.width; continue; }
         else if (i == "bottom") { l[i] = p.height - f.y - f.height; continue; }
         else if (i == "width") { l[i] = f.width; continue; }
@@ -456,7 +470,7 @@ SC.Animatable = {
   _animatableApplyStyles: function(layer, styles)
   {	
     if (!layer) return;
-
+    
     // handle a specific style first: display. There is a special case because it disrupts transitions.
     if (styles["display"]) {
       layer.style["display"] = styles["display"];
@@ -535,7 +549,13 @@ SC.Animatable = {
   _animatable_did_update_layer: function()
   {
     this._animatable_original_did_update_layer();
-    var styles = this._animatableCurrentStyle || (this.get("style") || {}), layer = this.get("layer");
+    var styles = this._animatableCurrentStyle, layer = this.get("layer");
+    if (!styles) {
+      styles = {};
+      var s = this.get("style");
+      var l = this.get("layout");
+      SC.mixin(styles, s, l);
+    }
     this._animatableApplyStyles(layer, styles);
   },
 
@@ -817,7 +837,7 @@ SC.mixin(SC.Animatable, {
   TRANSITION_CSS_EASE: "ease",
   TRANSITION_CSS_EASE_IN: "ease-in",
   TRANSITION_CSS_EASE_OUT: "ease-out",
-  TRANSITION_CSS_EASE_OUT: "ease-in-out",
+  TRANSITION_CSS_EASE_IN_OUT: "ease-in-out",
 
   // JavaScript-enabled
   TRANSITION_EASE: [0.25, 0.1, 0.25, 1.0],
