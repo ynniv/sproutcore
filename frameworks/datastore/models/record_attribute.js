@@ -6,6 +6,7 @@
 // ==========================================================================
 
 sc_require('models/record');
+sc_require('models/child_record');
 
 /** @class
 
