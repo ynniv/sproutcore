@@ -60,10 +60,12 @@ SC.ChildRecord = SC.Record.extend(
   */
   status: function() {
     var pStatus = SC.Record.EMPTY;
-    if (this._parentRecord && this._parentRecord) {
+    if (this._parentRecord) {
       pStatus = this._parentRecord.get('status');
       this.store.writeStatus(this.storeKey, pStatus);
       this.store.dataHashDidChange(this.storeKey);
+    } else {
+      pStatus = this.store.readStatus(this.storeKey);
     }
     return pStatus;
   }.property('storeKey').cacheable(),
@@ -79,6 +81,9 @@ SC.ChildRecord = SC.Record.extend(
     if (this._parentRecord && this._parentRecord.recordDidChange) {
       this._parentRecord.recordDidChange();
     }
+    else{
+      sc_super();
+    }
   },
   
   /**
@@ -87,14 +92,14 @@ SC.ChildRecord = SC.Record.extend(
    * all the children in a root parent tree  
    */
   createChildRecord: function(recordType, hash) {
-    var myParent = this._parentRecord;
+    var ret, myParent = this._parentRecord;
   
     if (myParent) {
-      return myParent.createChildRecord(recordType, hash);
+      ret = myParent.createChildRecord(recordType, hash);
     } else {
-      throw 'Error creating child record: Parent record is unknown.';
+      ret = sc_super();
     }
   
-    return null;
+    return ret;
   }  
 });

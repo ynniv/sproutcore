@@ -139,6 +139,8 @@ SC.ResponderContext = SC.Responder.extend({
       console.log('%@: makeFirstResponder => %@'.fmt(this, this.responderNameFor(responder)));
     }
     
+    responder.set("becomingFirstResponder", YES);
+    
     this._locked = YES;
     this._pendingResponder = null;
     
@@ -157,16 +159,25 @@ SC.ResponderContext = SC.Responder.extend({
 
     // Set new first responder.  If new firstResponder does not have its 
     // responderContext property set, then set it.
+    
+    // but, don't tell anyone until we have _also_ updated the hasFirstResponder state.
+    this.beginPropertyChanges();
+    
     this.set('firstResponder', responder) ;
     if (responder) responder.set('isFirstResponder', YES);
     
     this._notifyDidBecomeFirstResponder(responder, responder, common);
+    
+    // now, tell everyone the good news!
+    this.endPropertyChanges();
     
     this._locked = NO ;
     if (this._pendingResponder) {
       this.makeFirstResponder(this._pendingResponder);
       this._pendingResponder = null;
     }
+    
+    responder.set("becomingFirstResponder", NO);
     
     return this ;
   },
